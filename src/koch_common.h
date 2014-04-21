@@ -22,7 +22,10 @@
 #include <inttypes.h>
 
 // defines
-#define DEGREE_TO_RADIAN(x) ((x * 180) / PI)
+#define PI 3.141592653589793
+#define DEGREE_TO_RADIAN(x) (((double)x * PI) / 180)
+#define MAX_ARG_SIZE 0x80
+#define BORDER_CALC(seg) (seg/3)
 
 // Log
 #define LOG_LEVEL 3
