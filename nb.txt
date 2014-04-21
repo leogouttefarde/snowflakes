@@ -1,0 +1,18 @@
+
+
+
+dessin fractale Koch rec :
+
+xb = xa + (xe-xa)/3;
+yb = ya + (ye-ya)/3;
+xd = xa + 2 * (xe-xa)/3;
+yd = ya + 2 * (ye-ya)/3;
+xc = (xb+xd) * cos(60°) - (yd-yb) * sin(DEGREE_TO_RADIAN(60));
+yc = (yb+yd) * cos(60°) + (xd-xb) * sin(DEGREE_TO_RADIAN(60));
+
+
+
+koch_ihm.c
+While missing args, ask them interactively
+
+
