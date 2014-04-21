@@ -15,53 +15,66 @@ void init_parameters(struct parameters *parameters, int argc, char *argv[])
 {
 	if (parameters)
 	{
-		char input[6][MAX_ARG_SIZE], *temp = NULL;
+		const uint8_t NB_ARGS = 6;
+		char input[NB_ARGS][MAX_ARG_SIZE], *temp = NULL;
 		const uint32_t COUNT = argc-1;
+		uint32_t size;
 		bool error;
 
+		/* Récupération des arguments fournis en ligne de commande */
 		for (uint32_t i = 0; i < COUNT; ++i)
 		{
 			strncpy(input[i], argv[i+1], MAX_ARG_SIZE);
 			input[i][MAX_ARG_SIZE-1] = '\0';
 		}
 
-		for (uint32_t i = COUNT; i < 6; ++i)
+		/* Requete des arguments manquants */
+		for (uint32_t i = COUNT; i < NB_ARGS; ++i)
 		{
 			do {
 				error = false;
 
 				switch(i) {
 				case 0:
-					printf("Taille segment ? ");
+					printf("Taille des segments ? ");
 					break;
 				case 1:
-					printf("Nombre d'itérations ? ");
+					printf("Nombre d'iterations ? ");
 					break;
 				case 2:
-					printf("Couleur de trace ? (0xRRVVBB) ");
+					printf("Couleur de trace ? (format 0xRRVVBB) ");
 					break;
 				case 3:
-					printf("Couleur de fond ? (0xRRVVBB) ");
+					printf("Couleur de fond ? (format 0xRRVVBB) ");
 					break;
 				case 4:
 					printf("Nom de sortie ? ");
 					break;
 				case 5:
-					printf("Générer toutes les images intermédiaires ? (o/n) ");
+					printf("Generer toutes les images intermediaires ? (o/n) ");
 					break;
 				}
 
-				fgets(input[i], MAX_ARG_SIZE, stdin);
+				temp = input[i];
+				fgets(temp, MAX_ARG_SIZE, stdin);
 
-				if (strlen(input[i]) < 1) {
+				/* Enlève le caractère de retour chariot */
+				size = strlen(temp);
+				if ( size > 0 && temp[size-1] == '\n' )
+					temp[size-1] = '\0';
+
+				/* Gestion erreurs */
+				if (strlen(temp) < 1) {
 					error = true;
 					printf("Saisie invalide.\n\n");
 				}
 			} while (error);
 		}
-		if (COUNT < 6)
+
+		if (COUNT < NB_ARGS)
 			putchar('\n');
 
+		/* Enregistrement des valeurs */
 		parameters->segment_length = strtoul(input[0], NULL, 10);
 		parameters->image_size = 2 * BORDER_CALC(parameters->segment_length) + parameters->segment_length;
 		parameters->nb_iterations = strtoul(input[1], NULL, 10);
@@ -87,6 +100,8 @@ void init_parameters(struct parameters *parameters, int argc, char *argv[])
    des points du flocon de Koch */
 void show_koch_list(struct list *koch)
 {
+	printf( "Liste des coordonnees :\n" );
+
 	while (koch) {
 		printf("x = %d, y = %d\n", koch->x, koch->y);
 		koch = koch->next;
@@ -99,21 +114,24 @@ void show_koch_list(struct list *koch)
 void show_parameters(struct parameters parameters)
 {
 	printf(
-			"segment_length : %d\n"
-			"image_size : %d\n"
-			"nb_iterations : %d\n"
-			"fg_color : 0x%06X\n"
-			"bg_color : 0x%06X\n"
-			"all_images : %d\n"
-			"outfile : %s\n",
+			"Taille des segments : %d pixels\n"
+			"Taille de l'image : %d pixels\n"
+			"Nombre d'iterations : %d\n"
+			"Couleur de trace : 0x%06X\n"
+			"Couleur de fond : 0x%06X\n",
 			parameters.segment_length,
 			parameters.image_size,
 			parameters.nb_iterations,
 			parameters.fg_color,
-			parameters.bg_color,
-			parameters.all_images,
-			parameters.outfile
+			parameters.bg_color
 			);
+
+	if (parameters.all_images)
+		printf("Generer toutes les images intermediaires\n");
+	else
+		printf("Ne generer que l'image finale\n");
+
+	printf("Nom de sortie : %s\n\n", parameters.outfile);
 }
 
 /* Creation de l'image ppm dans un fichier */
@@ -153,6 +171,6 @@ void create_image(uint32_t *picture, int32_t size_x, int32_t size_y,
 
 		fclose(file);
 	} else {
-		TRACE(2, "Erreur de la generation PPM");
+		TRACE(2, "Erreur lors de la generation PPM");
 	}
 }

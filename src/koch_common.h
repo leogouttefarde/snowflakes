@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <strings.h>
 #include <string.h>
 #include <stdint.h>
 #include <time.h>
@@ -25,7 +26,7 @@
 #define PI 3.141592653589793
 #define DEGREE_TO_RADIAN(x) (((double)x * PI) / 180)
 #define MAX_ARG_SIZE 0x80
-#define BORDER_CALC(seg) (seg/3)
+#define BORDER_CALC(seg) ((3 * seg) / 12)
 
 // Log
 #define LOG_LEVEL 3
@@ -35,9 +36,5 @@
 // Other
 #define UNUSED(arg) ((void)(arg))
 #define SAFE_FREE(p) if (p) { free(p); p = NULL; }
-
-// structs
-
-// enums
 
 #endif
