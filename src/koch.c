@@ -12,24 +12,34 @@
 #include "koch_ihm.h"
 
 /* Lancement du programme */
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-	assert(1 != 0);
+	struct parameters parameters;
+	struct list *koch = NULL;
+	uint32_t *picture = NULL;
+
 	TRACE( 3, "Started" );
-	// char *config_file = NULL;
-	// char *outfile = NULL;
 
-	// if (argc >= 3)
-	// {
-	// 	//config_file = argv[1];
-	// 	//outfile = argv[2];
+	init_parameters(&parameters, argc, argv);
+	show_parameters(parameters);
+	init_koch(&koch, parameters.image_size, parameters.segment_length);
+	init_picture(&picture, parameters.image_size, parameters.bg_color);
+	assert(picture);
 
+	char *outfile = malloc(3 + strlen(parameters.outfile) + 1);
+	for (uint32_t nb_iterations = 0; nb_iterations <= parameters.nb_iterations; ++nb_iterations)
+	{
+		sprintf(outfile, "%02d_%s", nb_iterations, parameters.outfile);
+		generer_koch(koch, nb_iterations);
+		show_koch_list(koch);
+		render_image_bresenham(picture, koch, parameters.image_size, parameters.fg_color);
 
-	// 	//Config *config = config_read( config_file );
-	// }
-	// else if (argc >= 1) {
-	// 	printf("Usage : %s <config_file> <outfile>\n", argv[0]);
-	// }
+		create_image(picture, parameters.image_size, parameters.image_size, outfile);
+	}
+
+	/* Libérations mémoire */
+	SAFE_FREE(outfile);
+	free_koch(koch);
 
 	return EXIT_SUCCESS;
 }
