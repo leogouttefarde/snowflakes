@@ -86,12 +86,12 @@ void init_parameters(struct parameters *parameters, int argc, char *argv[])
 		strcpy(parameters->outfile, temp);
 
 		temp = input[5];
-		parameters->all_images = !strcasecmp(temp, "all") |
-									!strcasecmp(temp, "1") |
-									!strcasecmp(temp, "y") |
-									!strcasecmp(temp, "o") |
-									!strcasecmp(temp, "yes") |
-									!strcasecmp(temp, "oui") |
+		parameters->all_images = !strcasecmp(temp, "all") ||
+									!strcasecmp(temp, "1") ||
+									!strcasecmp(temp, "y") ||
+									!strcasecmp(temp, "o") ||
+									!strcasecmp(temp, "yes") ||
+									!strcasecmp(temp, "oui") ||
 									!strcasecmp(temp, "ok");
 	}
 }
