@@ -5,7 +5,6 @@ LDFLAGS = -lm -s
 
 SRC= $(wildcard *.c)
 OBJ= $(SRC:.c=.o)
-EXE= $(SRC:.c=)
 EXEC=./koch
 
 
@@ -21,7 +20,7 @@ cleanobj:
 	rm -f $(OBJ)
 
 clean:
-	rm -f $(OBJ) $(EXE) $(EXEC)
+	rm -f $(OBJ) $(EXEC)
 
 run: all
 	$(EXEC) 270 4 0xFF0000 0xFFFFFF koch.ppm all
